@@ -117,16 +117,16 @@ public class Hexagram {
             flist.add(z);
 
             //第二个点的X坐标
-            flist.add((float) (r * UNIT_SIZE * Math.cos(Math.toRadians(angle))));
+            flist.add((float) (r * UNIT_SIZE * Math.cos(Math.toRadians(angle + tempAngle / 2))));
             //第二个点的Y坐标
-            flist.add((float) (r * UNIT_SIZE * Math.sin(Math.toRadians(angle))));
+            flist.add((float) (r * UNIT_SIZE * Math.sin(Math.toRadians(angle + tempAngle / 2))));
             //第二个点的Z坐标
             flist.add(z);
 
             //第三个点的X坐标
-            flist.add((float) (R * UNIT_SIZE * Math.cos(Math.toRadians(angle + tempAngle / 2))));
+            flist.add((float) (R * UNIT_SIZE * Math.cos(Math.toRadians(angle + tempAngle))));
             //第三个点的Y坐标
-            flist.add((float) (R * UNIT_SIZE * Math.sin(Math.toRadians(angle + tempAngle / 2))));
+            flist.add((float) (R * UNIT_SIZE * Math.sin(Math.toRadians(angle + tempAngle))));
             //第三个点的Z坐标
             flist.add(z);
         }
@@ -140,7 +140,7 @@ public class Hexagram {
             vertexArray[i * 3 + 2] = flist.get(i * 3 + 2);
         }
         //一个float = 4byte
-        ByteBuffer vbb = ByteBuffer.allocate(vertexArray.length * 4);
+        ByteBuffer vbb = ByteBuffer.allocateDirect(vertexArray.length * 4);
         vbb.order(ByteOrder.nativeOrder());
         mVertexBuffer = vbb.asFloatBuffer();
         mVertexBuffer.put(vertexArray);
@@ -163,7 +163,7 @@ public class Hexagram {
                 colorArray[i * 4 + 3] = 0;
             }
         }
-        ByteBuffer cbb = ByteBuffer.allocate(colorArray.length * 4);
+        ByteBuffer cbb = ByteBuffer.allocateDirect(colorArray.length * 4);
         cbb.order(ByteOrder.nativeOrder());
         mColorBuffer = cbb.asFloatBuffer();
         mColorBuffer.put(colorArray);
