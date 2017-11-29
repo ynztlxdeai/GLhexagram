@@ -1,5 +1,7 @@
 package com.luoxiang.glhexagram;
 
+import android.opengl.GLES20;
+
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
@@ -25,10 +27,32 @@ public class Hexagram {
     float yAngle = 0;
     float xAngle = 0;
     final float UNIT_SIZE = 1;
-    //
+    //4X4的投影矩阵
+    public static float[] mProjMatrix = new float[16];
+    //摄像机位置朝向的参数矩阵
+    public static float[] mVMatrix    = new float[16];
+    //总变换矩阵
+    public static float[] mMVPMatrix;
+    //自定义渲染管线着色器程序ID
+    int mProgram;
+    //总变换矩阵引用
+    int muMVPMatrixHandle;
+    //顶点位置属性引用
+    int maPositionHandle;
+    //顶点颜色属性引用
+    int maColorHandle;
+    //顶点着色器代码
+    String mVertexShader;
+    //片元着色器代码
+    String mFragmentShader;
+    //具体物体的3D变换矩阵,包括旋转 平移 缩放
+    static float[] mMMatrix = new float[16];
+    //顶点坐标数据缓冲
+    FloatBuffer mVertexBuffer;
+    //顶点着色数据缓冲
+    FloatBuffer mColorBuffer;
+    //顶点数量
     int vCount;
-    private FloatBuffer mVertexBuffer;
-    private FloatBuffer mColorBuffer;
 
     public Hexagram(HexagramSurfaceView surfaceView, float R, float r, float z) {
         initVertexData(R, r, z);
@@ -40,7 +64,18 @@ public class Hexagram {
      * @param surfaceView
      */
     private void initShader(HexagramSurfaceView surfaceView) {
-
+        //加载顶点着色器
+        mVertexShader = ShaderUtil.loadFromAeertsFile("vertex.sh" , surfaceView.getResources());
+        //加载片元着色器
+        mFragmentShader = ShaderUtil.loadFromAeertsFile("frag.sh" , surfaceView.getResources());
+        //创建程序
+        mProgram = ShaderUtil.createProgram(mVertexShader , mFragmentShader);
+        //顶点位置属性引用
+        maPositionHandle = GLES20.glGetAttribLocation(mProgram , "aPosition");
+        //顶点颜色属性引用
+        maColorHandle = GLES20.glGetAttribLocation(mProgram , "aColor");
+        //总变换矩阵引用
+        muMVPMatrixHandle = GLES20.glGetUniformLocation(mProgram , "uMVPMatrix");
 
     }
 
