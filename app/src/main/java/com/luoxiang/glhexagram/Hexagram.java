@@ -1,6 +1,8 @@
 package com.luoxiang.glhexagram;
 
 import android.opengl.GLES20;
+import android.opengl.Matrix;
+import android.widget.MultiAutoCompleteTextView;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -21,8 +23,6 @@ import java.util.List;
  * upDate:	            2017/11/29
  * upDateDesc:	        TODO
  */
-
-
 public class Hexagram {
     float yAngle = 0;
     float xAngle = 0;
@@ -172,6 +172,33 @@ public class Hexagram {
     }
 
     public void drawSelf() {
+        //指定使用着色器程序
+        GLES20.glUseProgram(mProgram);
+        //初始化变换矩阵
+        Matrix.setRotateM(mMMatrix , 0 , 0 , 0 , 1 , 0);
+        //设置沿Z轴正方向唯一1
+        Matrix.translateM(mMMatrix , 0 , 0 , 0 , 1);
+        //设置绕Y轴旋转角度yAngle
+        Matrix.rotateM(mMMatrix , 0 , yAngle , 0 , 1 , 0);
+        //设置绕X轴旋转角度xAngle
+        Matrix.rotateM(mMMatrix , 0 , xAngle , 1 , 0 , 0);
+        //将最终变换矩阵传入渲染管线
+        GLES20.glUniformMatrix4fv(muMVPMatrixHandle , 1 , false , MatrixState.getFinalMatrix(mMMatrix) , 0);
+        GLES20.glVertexAttribPointer(maPositionHandle ,//顶点位置属性引用
+                                     3 ,//每顶点一组的数据个数(X Y Z 坐标 所以是3)
+                                     GLES20.GL_FLOAT ,//数据类型
+                                     false ,//是否规格化
+                                     3 * 4 ,//每组数据的尺寸,这里每组3个浮点数据,每个浮点4byte,所以是3*4
+                                     mVertexBuffer//存放了数据的缓冲区
+        );
+        //把颜色数据传送进渲染管线
+        GLES20.glVertexAttribPointer(maColorHandle , 4 , GLES20.GL_FLOAT , false , 4 * 4 , mColorBuffer);
+        //启用顶点位置数据和颜色数据
+        GLES20.glEnableVertexAttribArray(maPositionHandle);
+        GLES20.glEnableVertexAttribArray(maColorHandle);
 
+        //开始绘制,绘制三角形
+        GLES20.glDrawArrays(GLES20.GL_TRIANGLES , 0 , vCount);
     }
+
 }
