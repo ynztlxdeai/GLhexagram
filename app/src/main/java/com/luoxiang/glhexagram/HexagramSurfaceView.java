@@ -100,8 +100,9 @@ public class HexagramSurfaceView
             GLES20.glViewport(0 , 0 , width , height);
             float ratio = (float) width / height;
             //设置正交投影
-
+            MatrixState.setProjectionOrtho(-ratio , ratio , -1 , 1 , 1 , 10);
             //设置摄像机位置
+            MatrixState.setCamera(0 , 0 , 3f , 0 , 0 , 0f , 0f , 1.0f , 0.0f);
         }
 
         @Override
