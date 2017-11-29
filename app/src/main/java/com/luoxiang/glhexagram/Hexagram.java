@@ -16,5 +16,35 @@ package com.luoxiang.glhexagram;
 
 
 public class Hexagram {
+    float yAngle = 0;
+    float xAngle = 0;
+    final float UNIT_SIZE = 1;
 
+    public Hexagram(HexagramSurfaceView surfaceView , float R , float r , float z){
+        initVertexData(R , r , z);
+        initShader(surfaceView);
+    }
+
+    /**
+     * 初始化着色器
+     * @param surfaceView
+     */
+    private void initShader(HexagramSurfaceView surfaceView) {
+
+
+    }
+
+    /**
+     * 初始化顶点数据的方法
+     * @param R
+     * @param r
+     * @param z
+     */
+    private void initVertexData(float R, float r, float z) {
+
+    }
+
+    public void drawSelf(){
+
+    }
 }

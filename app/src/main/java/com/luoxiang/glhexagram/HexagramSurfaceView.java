@@ -1,6 +1,7 @@
 package com.luoxiang.glhexagram;
 
 import android.content.Context;
+import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -66,33 +67,51 @@ public class HexagramSurfaceView
             case MotionEvent.ACTION_MOVE:
                 float dy = y - mPreviousY;
                 float dx = x - mPreviousX;
-
-                break;
-
-            default:
+                for(Hexagram hexagram : mSceneRenderer.mHexagrams){
+                    hexagram.yAngle += dx * TOUCH_SCALE_FACTOR;
+                    hexagram.xAngle += dy * TOUCH_SCALE_FACTOR;
+                }
                 break;
         }
-
+        mPreviousY = y ;
+        mPreviousX = x ;
         return true;
     }
 
     private class SceneRenderer
             implements GLSurfaceView.Renderer
     {
+        Hexagram[] mHexagrams = new Hexagram[6];
 
         @Override
         public void onSurfaceCreated(GL10 gl, EGLConfig config) {
-
+           //设置背景颜色RGBA
+            GLES20.glClearColor(0.5f ,0.5f ,0.5f ,1.0f );
+            for (int i = 0; i < mHexagrams.length; i++) {
+                mHexagrams[i] = new Hexagram(HexagramSurfaceView.this , 0.2f , 0.5f , -0.3f * i);
+            }
+            //开启深度测试
+            GLES20.glEnable(GLES20.GL_DEPTH_TEST);
         }
 
         @Override
         public void onSurfaceChanged(GL10 gl, int width, int height) {
+            //设置视窗位置
+            GLES20.glViewport(0 , 0 , width , height);
+            float ratio = (float) width / height;
+            //设置正交投影
 
+            //设置摄像机位置
         }
 
         @Override
         public void onDrawFrame(GL10 gl) {
-
+            //清除深度和颜色缓冲
+            GLES20.glClear(GLES20.GL_DEPTH_BUFFER_BIT | GLES20.GL_COLOR_BUFFER_BIT);
+            //绘制六角星
+            for (Hexagram hexagram : mHexagrams){
+                hexagram.drawSelf();
+            }
         }
     }
 }
