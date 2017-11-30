@@ -36,7 +36,22 @@ public class MatrixState {
      * @param far   far面与视点的距离
      */
     public static void setProjectionOrtho(float left , float right , float bottom , float top , float near , float far){
-        Matrix.orthoM(mProjMatrix , 0 , left , right , bottom , top , near , far);
+        Matrix.orthoM(mProjMatrix , 0 ,//起始偏移量
+                      left , right , bottom , top , near , far);
+    }
+
+    /**
+     * 设置透视投影
+     * @param left near面的left
+     * @param right near面的right
+     * @param bottom near面的bottom
+     * @param top   near面的top
+     * @param near near面与视点的距离
+     * @param far   far面与视点的距离
+     */
+    public static void setProjectFrustum(float left , float right , float bottom , float top , float near , float far){
+        Matrix.frustumM(mProjMatrix, 0 ,//起始偏移量
+                        left , right , bottom , top , near , far );
     }
 
     /**

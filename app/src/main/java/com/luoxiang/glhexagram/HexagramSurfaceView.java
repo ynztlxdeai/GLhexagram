@@ -88,7 +88,10 @@ public class HexagramSurfaceView
            //设置背景颜色RGBA
             GLES20.glClearColor(0.5f ,0.5f ,0.5f ,1.0f );
             for (int i = 0; i < mHexagrams.length; i++) {
-                mHexagrams[i] = new Hexagram(HexagramSurfaceView.this , 0.2f , 0.5f , -0.3f * i);
+                //正交投影数据
+                //mHexagrams[i] = new Hexagram(HexagramSurfaceView.this , 0.2f , 0.5f , -0.3f * i);
+                //透视投影数据
+                mHexagrams[i] = new Hexagram(HexagramSurfaceView.this , 0.4f , 1.0f , 1.0f * i);
             }
             //开启深度测试
             GLES20.glEnable(GLES20.GL_DEPTH_TEST);
@@ -99,10 +102,18 @@ public class HexagramSurfaceView
             //设置视窗位置
             GLES20.glViewport(0 , 0 , width , height);
             float ratio = (float) width / height;
+
+
             //设置正交投影
-            MatrixState.setProjectionOrtho(-ratio , ratio , -1 , 1 , 1 , 10);
+            //MatrixState.setProjectionOrtho(-ratio , ratio , -1 , 1 , 1 , 10);
             //设置摄像机位置
-            MatrixState.setCamera(0 , 0 , 3f , 0 , 0 , 0f , 0f , 1.0f , 0.0f);
+            //MatrixState.setCamera(0 , 0 , 3f , 0 , 0 , 0f , 0f , 1.0f , 0.0f);
+
+
+            //透视投影
+            MatrixState.setProjectFrustum(-ratio * 0.4f , ratio * 0.4f , -1 * 0.4f , 1 * 0.4f , 1 , 50);
+            //设置摄像机位置
+            MatrixState.setCamera(0f , 0f , 6f , 0f , 0f , 0f , 0f , 1.0f , 0.0f);
         }
 
         @Override
